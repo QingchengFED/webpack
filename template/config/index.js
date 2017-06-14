@@ -5,7 +5,7 @@ module.exports = {
   build: {
     env: require('./prod.env'),
     index: path.resolve(__dirname, '../dist/index.html'),
-    assetsRoot: path.resolve(__dirname, '../dist'),
+    assetsRoot: path.resolve(__dirname, '../../../../applications/{{name}}/'),
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     productionSourceMap: true,
@@ -34,5 +34,12 @@ module.exports = {
     // In our experience, they generally work as expected,
     // just be aware of this issue when enabling this option.
     cssSourceMap: false
-  }
+  },
+  prePublish: {
+    env: require('./pre_publish.env'),
+    assetsRoot: path.resolve(__dirname, '../dist/'),
+    assetsSubDirectory: '',
+    assetsPublicPath: '/static/{{ name }}/',
+    productionSourceMap: true,
+  },
 }

@@ -1,6 +1,6 @@
 // 1. start the dev server using production config
 process.env.NODE_ENV = 'testing'{{#if_eq lintConfig "airbnb"}};{{/if_eq}}
-var server = require('../../build/dev-server.js'){{#if_eq lintConfig "airbnb"}};{{/if_eq}}
+var server = require('../../build_scripts/dev-server.js'){{#if_eq lintConfig "airbnb"}};{{/if_eq}}
 
 server.ready.then(() => {
   // 2. run the nightwatch test suite against it

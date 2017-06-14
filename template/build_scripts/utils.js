@@ -1,11 +1,43 @@
 var path = require('path')
 var config = require('../config')
+var walk = require('walk')
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
 
+function underline2camel(name) {
+  var reg = /(\_[a-zA-Z])/g;
+  return name.replace(reg, function(s0, s1){
+    return s1.replace('_', '').toUpperCase();
+  })
+}
+
+exports.getEntries = function () {
+  var entries = {};
+  var options = {
+    listeners: {
+      names: function (root, nodeNamesArray) {
+        nodeNamesArray.forEach(function(item){
+          entries[underline2camel(item.replace('.js', '')) + 'App'] = path.join(root, item);
+        })
+      }
+    }
+  };
+
+  var walker = walk.walkSync(path.join(__dirname, '../src/entries'), options);
+
+  return entries;
+};
+
 exports.assetsPath = function (_path) {
-  var assetsSubDirectory = process.env.NODE_ENV === 'production'
-    ? config.build.assetsSubDirectory
-    : config.dev.assetsSubDirectory
+  var assetsSubDirectory;
+
+  if (process.env.NODE_ENV === 'production') {
+    assetsSubDirectory = config.build.assetsSubDirectory;
+  } else if (process.env.NODE_ENV === 'prePub') {
+    assetsSubDirectory = config.prePublish.assetsSubDirectory;
+  } else  {
+    assetsSubDirectory = config.dev.assetsSubDirectory;
+  }
+
   return path.posix.join(assetsSubDirectory, _path)
 }
 
