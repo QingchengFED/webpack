@@ -25,6 +25,11 @@ module.exports = {
       '@': resolve('src')
     }
   },
+  resolveLoader: {
+    modules: [path.join(__dirname, '../node_modules')],
+    extensions: [".js", ".json"],
+    mainFields: ["loader", "main"]
+  },
   module: {
     rules: [
       {{#lint}}
