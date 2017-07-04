@@ -30,6 +30,10 @@ module.exports = {
     extensions: [".js", ".json"],
     mainFields: ["loader", "main"]
   },
+  externals: {
+      moment: true,
+      _: true
+  },
   module: {
     rules: [
       {{#lint}}
