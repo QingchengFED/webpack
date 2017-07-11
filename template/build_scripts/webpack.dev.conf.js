@@ -11,13 +11,16 @@ Object.keys(baseWebpackConfig.entry).forEach(function (name) {
   baseWebpackConfig.entry[name] = ['./build_scripts/dev-client'].concat(baseWebpackConfig.entry[name])
 })
 
-module.exports = merge(baseWebpackConfig, {
-  module: {
-    rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap })
-  },
-  // cheap-module-eval-source-map is faster for development
-  devtool: '#cheap-module-eval-source-map',
-  plugins: [
+function generatePageConfig(name) {
+  return {
+    filename: name + '.html',
+    template: 'index.html',
+    inject: true,
+    chunks: [name + 'App'],
+  }
+}
+
+var plugins = [
     new webpack.DefinePlugin({
       'process.env': config.dev.env
     }),
@@ -31,5 +34,17 @@ module.exports = merge(baseWebpackConfig, {
       inject: true
     }),
     new FriendlyErrorsPlugin()
-  ]
+];
+
+plugins = plugins.concat(Object.keys(baseWebpackConfig.entry).map(function (key) {
+  return new HtmlWebpackPlugin(generatePageConfig(key.replace('App', '')));
+}));
+
+module.exports = merge(baseWebpackConfig, {
+  module: {
+    rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap })
+  },
+  // cheap-module-eval-source-map is faster for development
+  devtool: '#cheap-module-eval-source-map',
+  plugins: plugins,
 })
